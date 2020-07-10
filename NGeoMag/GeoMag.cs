@@ -20,7 +20,13 @@ namespace NGeoMag
     /// </summary>
     public class GeoMag : IDisposable
     {
-
+        /// <summary>
+        /// The input string array which contains each line of input for the
+        ///	wmm.cof input file.Added so that all data was internal, so that 
+        ///	applications do not have to mess with carrying around a data file.
+        /// In the TSAGeoMag Class, the columns in this file are as follows:
+        /// n, m, gnm, hnm, dgnm, dhnm
+        /// </summary>
         private readonly string[] _input =
         {       "   2020.0            WMM-2020        12/10/2019",
         "  1  0  -29404.5       0.0        6.7        0.0",
@@ -219,6 +225,7 @@ namespace NGeoMag
 
         private readonly string _filePath;
         private StreamReader _reader;
+        private CultureInfo _usCulture = new CultureInfo("en_US");
         ///<summary>Instantiates object by calling initModel().</summary>
         public GeoMag(string path)
         {
@@ -229,9 +236,6 @@ namespace NGeoMag
 
         public GeoMag()
         {
-            var assembly = typeof(App).GetTypeInfo().Assembly;
-            var stream = assembly.GetManifestResourceStream($"SpecialForcesDirectory.Data.WMM.COF");
-            _reader = new StreamReader(stream, Encoding.UTF8);
             InitModel();
         }
 
@@ -273,13 +277,12 @@ namespace NGeoMag
 
             try
             {
-                //open data file and parse values
-                //InputStream is;
-
-                var us = CultureInfo.GetCultureInfo(1033);
-
                 if (_reader == null)
-                    _reader = new StreamReader(_filePath);
+                {
+                    if (string.IsNullOrWhiteSpace(_filePath)) throw new FileNotFoundException($"{_filePath} not found");
+                    var stream = new FileStream(_filePath,FileMode.Open);
+                    _reader = new StreamReader(stream);
+                }
                 if (_input == null) throw new FileNotFoundException($"{_filePath} not found");
 
 
@@ -287,8 +290,8 @@ namespace NGeoMag
                 _c[0, 0] = 0.0;
                 _cd[0, 0] = 0.0;
                 // str.NextToken();
-                var epochStr = _reader.ReadLine().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                _epoch = double.Parse(epochStr[0], us);
+                var epochStr = _reader.ReadLine().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                _epoch = double.Parse(epochStr[0], _usCulture);
                 _defaultDate = _epoch + 2.5;
                 //loop to get data from file
                 while (true)
@@ -296,14 +299,14 @@ namespace NGeoMag
                     var val = _reader.ReadLine();
                     if (val.Contains("999999999999999999999999999999999999999999999999"))
                         break;
-                    var values = val.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    var values = val.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
                     var n = int.Parse(values[0]);
                     var m = int.Parse(values[1]);
-                    var gnm = double.Parse(values[2], us);
-                    var hnm = double.Parse(values[3], us);
-                    var dgnm = double.Parse(values[4], us);
-                    var dhnm = double.Parse(values[5], us);
+                    var gnm = double.Parse(values[2], _usCulture);
+                    var hnm = double.Parse(values[3], _usCulture);
+                    var dgnm = double.Parse(values[4], _usCulture);
+                    var dhnm = double.Parse(values[5], _usCulture);
 
                     if (m <= n)
                     {
@@ -411,19 +414,19 @@ namespace NGeoMag
         ///                SPHERICAL HARMONIC MODEL SUCH AS WMM-95, THE ESTIMATED
         ///                RMS ERRORS FOR THE VARIOUS MAGENTIC COMPONENTS ARE:</p>
         ///<ul>
-        ///                DEC  -   0.5 Degrees<br>
-        ///                DIP  -   0.5 Degrees<br>
-        ///                TI   - 280.0 nanoTeslas (nT)<br>
-        ///                GV   -   0.5 Degrees<br></ul>
+        ///                DEC  -   0.5 Degrees<br/>
+        ///                DIP  -   0.5 Degrees<br/>
+        ///                TI   - 280.0 nanoTeslas (nT)<br/>
+        ///                GV   -   0.5 Degrees<br/></ul>
         ///
         ///                <p>OTHER MAGNETIC COMPONENTS THAT CAN BE DERIVED FROM
         ///                THESE FOUR BY SIMPLE TRIGONOMETRIC RELATIONS WILL
         ///                HAVE THE FOLLOWING APPROXIMATE ERRORS OVER OCEAN AREAS:</p>
         ///<ul>
-        ///                X    - 140 nT (North)<br>
-        ///                Y    - 140 nT (East)<br>
-        ///                Z    - 200 nT (Vertical)  Positive is down<br>
-        ///                H    - 200 nT (Horizontal)<br></ul>
+        ///                X    - 140 nT (North)<br/>
+        ///                Y    - 140 nT (East)<br/>
+        ///                Z    - 200 nT (Vertical)  Positive is down<br/>
+        ///                H    - 200 nT (Horizontal)<br/></ul>
         ///
         ///                <p>OVER LAND THE RMS ERRORS ARE EXPECTED TO BE SOMEWHAT
         ///                HIGHER, ALTHOUGH THE RMS ERRORS FOR DEC, DIP AND GV
@@ -480,9 +483,8 @@ namespace NGeoMag
             _glat = fLat;
             _glon = fLon;
             _alt = altitude;
-            /**
-             *	The date in decimal years for calculating the magnetic field components.
-             */
+
+            // The date in decimal years for calculating the magnetic field components.
             _time = year;
 
             var dt = _time - _epoch;
@@ -902,21 +904,21 @@ namespace NGeoMag
         {
             _c[0, 0] = 0.0;
             _cd[0, 0] = 0.0;
-
-            _epoch = double.Parse(_input[0].Trim().Split("[\\s]+")[0]);
+            var firstLine = _input[0].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            _epoch = double.Parse(firstLine[0], _usCulture);
             _defaultDate = _epoch + 2.5;
 
             //loop to get data from internal values
             for (var i = 1; i < _input.Length; i++)
             {
-                var tokens = _input[i].Trim().Split("[\\s]+");
+                var tokens = _input[i].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                var n = int.Parse(tokens[0]);
-                var m = int.Parse(tokens[1]);
-                var gnm = double.Parse(tokens[2]);
-                var hnm = double.Parse(tokens[3]);
-                var dgnm = double.Parse(tokens[4]);
-                var dhnm = double.Parse(tokens[5]);
+                var n = int.Parse(tokens[0], _usCulture);
+                var m = int.Parse(tokens[1], _usCulture);
+                var gnm = double.Parse(tokens[2], _usCulture);
+                var hnm = double.Parse(tokens[3], _usCulture);
+                var dgnm = double.Parse(tokens[4], _usCulture);
+                var dhnm = double.Parse(tokens[5], _usCulture);
 
                 if (m <= n)
                 {
@@ -948,8 +950,18 @@ namespace NGeoMag
         public double DecimalYear(DateTime cal)
         {
             var year = cal.Year;
-            var daysInYear = DateTime.IsLeapYear(year) ? 366.0 : 365.0;
+            double daysInYear;
+            if (DateTime.IsLeapYear(year))
+            {
+                daysInYear = 366.0;
+            }
+            else
+            {
+                daysInYear = 365.0;
+            }
+
             return year + (cal.DayOfYear) / daysInYear;
+
         }
 
         public void Dispose()
