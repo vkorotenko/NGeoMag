@@ -8,15 +8,15 @@ https://www.ngdc.noaa.gov/geomag/WMM/thirdpartycontributions.shtml
 
 
 
-## Авторы
+## РђРІС‚РѕСЂС‹
 
 * **Vladimir N. Korotenko** 
 
-## Сотрудничество
+## РЎРѕС‚СЂСѓРґРЅРёС‡РµСЃС‚РІРѕ
 https://t.me/vkorotenko
 
-По возникшим вопросам обращайтесь по электронной почте [koroten@ya.ru](mailto:koroten@ya.ru)
-или в Telegram [@vkorotenko](https://t.me/vkorotenko) 
+РџРѕ РІРѕР·РЅРёРєС€РёРј РІРѕРїСЂРѕСЃР°Рј РѕР±СЂР°С‰Р°Р№С‚РµСЃСЊ РїРѕ СЌР»РµРєС‚СЂРѕРЅРЅРѕР№ РїРѕС‡С‚Рµ [koroten@ya.ru](mailto:koroten@ya.ru)
+РёР»Рё РІ Telegram [@vkorotenko](https://t.me/vkorotenko) 
 
 ## License
 
