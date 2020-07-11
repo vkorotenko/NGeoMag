@@ -6,7 +6,18 @@ Port of Java library "John St. Ledger	Java implementation with tests." https://w
 Base page to see other lang.
 https://www.ngdc.noaa.gov/geomag/WMM/thirdpartycontributions.shtml
 
+## Usage
+```lang='C#'
+// Initialize with file
+GeoMag magFileModel = new GeoMag("WMM.COF");
+// Use internal constant
+GeoMag magModel = new GeoMag();
 
+
+// -112.41
+var declination  = magModel.GetDeclination(89, -121, 2020.0, 28);
+
+```
 
 ## Авторы
 
@@ -20,4 +31,4 @@ https://t.me/vkorotenko
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/vkorotenko/NGeoMag/blob/master/LICENSE) file for details
+This project is licensed under the CC License - see the [LICENSE](https://github.com/vkorotenko/NGeoMag/blob/master/LICENSE) file for details

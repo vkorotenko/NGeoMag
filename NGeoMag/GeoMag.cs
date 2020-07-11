@@ -10,13 +10,11 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
-using System.Text;
 
 namespace NGeoMag
 {
     /// <summary>
-    /// 
+    /// Geo magnetic calculator.
     /// </summary>
     public class GeoMag : IDisposable
     {
@@ -226,14 +224,13 @@ namespace NGeoMag
         private readonly string _filePath;
         private StreamReader _reader;
         private CultureInfo _usCulture = new CultureInfo("en_US");
-        ///<summary>Instantiates object by calling initModel().</summary>
+        ///<summary>Instantiates object by calling initModel() with file.</summary>
+        /// <param name="path">Path to WMM.COF</param>
         public GeoMag(string path)
         {
             _filePath = path;
-            //read model data from file and initialize the GeoMag routine
             InitModel();
         }
-
         public GeoMag()
         {
             InitModel();
@@ -324,22 +321,11 @@ namespace NGeoMag
             }
             catch (FileNotFoundException e)
             {
-                var msg = "\nNOTICE      NOTICE      NOTICE      \n" +
-                    "WMMCOF file not found in TSAGeoMag.InitModel()\n" +
-                    "The input file WMM.COF was not found in the same\n" +
-                    "directory as the application.\n" +
-                    "The magnetic field components are set to internal values.\n";
-                // logger.warn(msg, e);
-
-                /*            String message = new String(e.toString());
-
-                    System.out.println("\nNOTICE      NOTICE      NOTICE      ");
-                    System.out.println("Error:  " + message);
-                    System.out.println("Error in TSAGeoMag.InitModel()");
-                    System.out.println("The input file WMM.COF was not found in the same");
-                    System.out.println("directory as the application.");
-                    System.out.println("The magnetic field components are set to internal values.");
-                 */
+                const string msg = "\nNOTICE      NOTICE      NOTICE      \n" +
+                                   "WMMCOF file not found in TSAGeoMag.InitModel()\n" +
+                                   "The input file WMM.COF was not found in the same\n" +
+                                   "directory as the application.\n" +
+                                   "The magnetic field components are set to internal values.\n";
                 Debug.WriteLine(msg);
                 Debug.WriteLine(e.Message);
                 SetCoeff();
@@ -950,16 +936,7 @@ namespace NGeoMag
         public double DecimalYear(DateTime cal)
         {
             var year = cal.Year;
-            double daysInYear;
-            if (DateTime.IsLeapYear(year))
-            {
-                daysInYear = 366.0;
-            }
-            else
-            {
-                daysInYear = 365.0;
-            }
-
+            var daysInYear = DateTime.IsLeapYear(year) ? 366.0 : 365.0;
             return year + (cal.DayOfYear) / daysInYear;
 
         }
