@@ -4,16 +4,16 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>NGeoMag</AssemblyName>
     <RootNamespace>NGeoMag</RootNamespace>
-    <PackageId>NAddressParser</PackageId>
-    <PackageVersion>5.9.0</PackageVersion>
+    <PackageId>NGeoMag</PackageId>
+    <PackageVersion>5.9.1</PackageVersion>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageTags>NOAA WMM</PackageTags>
     <PackageProjectUrl>https://github.com/vkorotenko/NGeoMag</PackageProjectUrl>
     <RepositoryUrl>https://github.com/vkorotenko/NGeoMag</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <AssemblyVersion>5.9.0.0</AssemblyVersion>
-    <FileVersion>5.9.0.0</FileVersion>
-    <Version>5.9.0</Version>
+    <AssemblyVersion>5.9.1.0</AssemblyVersion>
+    <FileVersion>5.9.1.0</FileVersion>
+    <Version>5.9.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl></PackageLicenseUrl>
     <Copyright>Vladimir Korotenko</Copyright>
@@ -66,6 +66,7 @@
     <AssemblyName>NAddressParser</AssemblyName>
     <TargetFrameworks>netstandard1.3;netstandard2.1;net45;net46;net472;netcoreapp1;netcoreapp2;netcoreapp3;netcoreapp3.1</TargetFrameworks>
     <FileAlignment>512</FileAlignment>
+    <Product>NGeoMag</Product>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
